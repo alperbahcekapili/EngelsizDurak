@@ -47,33 +47,32 @@ from Inform import generateText, inform
 from QR import getBusCode, readImageFromCamera
 
 
-try:
-    while True:
-        
-        
+
+while True:
+    try:
         time.sleep(1)
         # 1 saniye uyusun
 
         frame = readImageFromCamera()
-        print("sa")
+        
+
         buscode = getBusCode(frame)
         # qr okundu ve otobus kodu alindi
 
         if buscode == -1:
             continue
 
-        print(buscode)
 
         (hici, ctesi, pazar) = crawlRoute(buscode)
         # guncel sefer saatleri alindi
-        print(buscode)
 
         closest_time = getClosestTime((hici, ctesi, pazar))
         state = 1 if closest_time == -1 else 0
-        print(buscode)
 
         generated_text = generateText(buscode=buscode, state=state, time = closest_time)
         inform(generated_text)
-except Exception as e:
-    print(traceback.format_exc())
-    print("TODO: implement a error logging system")
+
+        
+    except Exception as e:
+        print(traceback.format_exc())
+        print("TODO: implement a error logging system")

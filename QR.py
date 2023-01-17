@@ -1,6 +1,8 @@
 import sklearn
 import cv2
 
+from Authorization import verifyQr
+
 qcd = cv2.QRCodeDetector()
 cam = cv2.VideoCapture(0)
 
@@ -17,7 +19,15 @@ def readFromFile(file_path):
 
 def getBusCode(frame):
     retval, decoded_info, points, straight_qrcode = qcd.detectAndDecodeMulti(frame)
-    return decoded_info[0] if retval else -1
+    
+    # >1 qr or invalid qr, only 1 valid qr assumed
+    if retval:
+        for text in decoded_info:
+            if verifyQr(text):
+                return text
+    
+    return -1
+
 
 
 def readImageFromCamera():
