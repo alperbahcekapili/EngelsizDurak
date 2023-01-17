@@ -43,10 +43,13 @@ import threading
 import time
 from Crawler import crawlRoute, getClosestTime
 from Inform import generateText, inform
+from Logger import Logger, openNewLog
 
 from QR import getBusCode, readImageFromCamera
 
 
+
+logger = Logger()
 
 while True:
     try:
@@ -59,6 +62,8 @@ while True:
         buscode = getBusCode(frame)
         # qr okundu ve otobus kodu alindi
 
+
+
         if buscode == -1:
             continue
 
@@ -69,10 +74,16 @@ while True:
         closest_time = getClosestTime((hici, ctesi, pazar))
         state = 1 if closest_time == -1 else 0
 
-        generated_text = generateText(buscode=buscode, state=state, time = closest_time)
-        inform(generated_text)
+        if state == 1:
+            # warning 
+            logger.warning("Following bus has been confronted but not anounced: " + buscode)
 
+        generated_text = generateText(buscode=buscode, state=state, time = closest_time)
+
+        inform(generated_text)
+        logger.information("Following anouncement has been made: " + generated_text)
+        
         
     except Exception as e:
-        print(traceback.format_exc())
-        print("TODO: implement a error logging system")
+        
+        logger.error(traceback.format_exc())
