@@ -5,9 +5,9 @@ import os
 class Logger:
 
     def __init__(self):
-        self.logfile = self.openNewLogger()
+        self.logfile = self.openNewLog()
 
-    def openNewLog(self,):
+    def openNewLog(self):
         newfile = os.path.join(os.getcwd(), "Logs", datetime.now().strftime("%m %d %Y, %H %M %S"))
         newfile = open(newfile, "w+", encoding="utf-8")
         return newfile

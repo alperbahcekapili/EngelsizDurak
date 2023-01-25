@@ -43,16 +43,22 @@ import threading
 import time
 from Crawler import crawlRoute, getClosestTime
 from Inform import generateText, inform
-from Logger import Logger, openNewLog
+from Logger import Logger
+from Otobus import Otobus
 
 from QR import getBusCode, readImageFromCamera
 
 
 
 logger = Logger()
+DURAK_NO = "12514"
+
+
 
 while True:
     try:
+        latest_played = ""
+
         time.sleep(1)
         # 1 saniye uyusun
 
@@ -64,25 +70,37 @@ while True:
 
 
 
-        if buscode == -1:
-            continue
+        # if buscode == -1:
+        #     continue
+        # change here
+
+        buscode = "101"
 
 
-        (hici, ctesi, pazar) = crawlRoute(buscode)
+        oto:Otobus = crawlRoute(buscode)
         # guncel sefer saatleri alindi
 
-        closest_time = getClosestTime((hici, ctesi, pazar))
+        if oto == None:
+            logger.error(f"Bus code: {buscode} neither could not be crawled or found from database")
+
+        closest_time = getClosestTime((oto.hici, oto.ctesi, oto.pazar))
         state = 1 if closest_time == -1 else 0
 
         if state == 1:
             # warning 
             logger.warning("Following bus has been confronted but not anounced: " + buscode)
 
-        generated_text = generateText(buscode=buscode, state=state, time = closest_time)
+        generated_text = generateText(bus=oto, cur_station_no=DURAK_NO,  state=state, time = closest_time)
 
-        inform(generated_text)
+        mp3_file = inform(generated_text)
+        latest_played = mp3_file
         logger.information("Following anouncement has been made: " + generated_text)
-        
+
+        if latest_played != "":
+            from mutagen.mp3 import MP3
+            audio = MP3(latest_played)
+            time.sleep(2+int(audio.info.length))
+        break
         
     except Exception as e:
         

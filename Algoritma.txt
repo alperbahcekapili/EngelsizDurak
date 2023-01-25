@@ -1,0 +1,65 @@
+her 1 saniyede tekrarla
+
+kameradan fotoğraf al
+
+Otobüsün kodunu tespit et 
+
+Eğer kod gerçekten bir kodsa;
+
+	İnternet bağlantısını kontrol et;
+	
+	Eğer bağlantı varsa;
+ 
+		Bu kod için internetten güncel sefer bilgilerini al
+
+	Eğer bağlantı yoksa;
+
+		Bu kod için diskte ilgili sefer bilgileri var mı ?
+
+		Eğer varsa;
+
+			Bu kod için sefer bilgilerini diskten al
+
+		Eğer yoksa;
+
+			Bilgilendirme işlemi başarısız olmuştur. Bağlantı sağlanana kadar işlem yapılamaz. Başa dön
+
+
+	Duraktan geçiş saatleri içerisinde en yakın olan sefer 2dk'lik periyotta mı ?
+
+	Eğer evet ise;
+
+		Bu hattın, bu saatteki seferi için ilgili bilgilendirme daha önce kaydedilmiş mi ?
+
+		Eğer evet ise;
+
+			Bu kaydı diskten oku ve seslendir
+
+		Eğer hayır ise;
+
+			Bu kaydı ilgili template' leri kullanarak oluştur ve diske kaydet
+
+			Bu kaydı diskten oku ve seslendir
+
+	Eğer hayır ise;
+
+		Bu hat servis dışıdır. ilgili bilgilendirme daha önce kaydedilmiş mi ?
+
+		Eğer evet ise;
+
+			Bu kaydı diskten oku ve seslendir
+
+		Eğer hayır ise;
+
+			Bu kaydı ilgili template' leri kullanarak oluştur ve diske kaydet
+
+			Bu kaydı diskten oku ve seslendir
+
+	Kaydın bittiğinden emin olacak kadar süre bekle
+
+	
+Eğer kod gerçek bir kod değilse(okuma başarısız olmuştur)
+	
+	Başa dön
+
+	

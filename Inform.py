@@ -1,6 +1,8 @@
 from gtts import gTTS
 import os
 
+from Otobus import Otobus
+
 
 templates = [None  for _ in range(2)]
 
@@ -16,7 +18,8 @@ def checkTextExists(text):
 
     #increase this key if 
     for line in key_values[:-1]:
-        [key, value] = line.split(",")
+        key = line.split(",")[0]
+        value = ",".join(line.split(",")[1:])
         if value.strip() == text:
             return (True, key)
     
@@ -35,22 +38,35 @@ def checkTextExists(text):
 
 
 def play(key):
-    os.system(f"start {os.path.join(os.getcwd(), 'Voices', f'{key}.mp3')}")
+    from playsound import playsound
+
+    playsound(f"{os.path.join(os.getcwd(), 'Voices', f'{key}.mp3')}")
 
 
 def inform(text):
     ( exists, key ) = checkTextExists(text)
+    mp3_path = os.path.join(os.getcwd(), "Voices", f"{key}.mp3")
     if not exists:
       
         myobj = gTTS(text=text, lang="tr", slow=False)
-        myobj.save(os.path.join(os.getcwd(), "Voices", f"{key}.mp3"))
+        myobj.save(mp3_path)
     
     play(key)
+    return mp3_path
 
 
 
-def generateText(state: int, buscode, time):
+def generateText(state: int, cur_station_no ,bus:Otobus, time):
     #0:  kalkis, 1: servis disi
+
+    buscode = bus.no
+    cur_station_index = bus.duraklar["numaralar"].index(cur_station_no)
+    if cur_station_index + 3 < len(bus.duraklar["numaralar"]):
+        following_stations = bus.duraklar["isimler"][cur_station_index: cur_station_index+3]
+    else:
+        following_stations = bus.duraklar["isimler"][cur_station_index: ]
+    
+
     template = ""
     print(time)
     if state == 0:
@@ -62,8 +78,8 @@ def generateText(state: int, buscode, time):
             templates[state] = template
         else:
             template = templates[state]            
-
-        return buscode  + " " +  template[1] + " " + time + " " + template[2]
+        # duraklari ekle
+        return str(buscode)  + " " +  template[1] + " " + time + " " + template[2] + ",".join(following_stations)
 
 
 
