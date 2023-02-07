@@ -39,7 +39,6 @@ We may need to detect the number plate for accurate authorization   Future
 
 
 import traceback
-import threading
 import time
 from Crawler import crawlRoute, getClosestTime
 from Inform import generateText, inform
@@ -51,7 +50,7 @@ from QR import getBusCode, readImageFromCamera
 
 
 logger = Logger()
-DURAK_NO = "12514"
+DURAK_NO = "20599"
 
 
 
@@ -59,7 +58,7 @@ while True:
     try:
         latest_played = ""
 
-        time.sleep(1)
+        time.sleep(0.05)
         # 1 saniye uyusun
 
         frame = readImageFromCamera()
@@ -67,18 +66,20 @@ while True:
 
         buscode = getBusCode(frame)
         # qr okundu ve otobus kodu alindi
+        
+        
 
 
+        if buscode == -1:
+            print("QR Kod Tespit edilemedi")
+            continue
 
-        # if buscode == -1:
-        #     continue
-        # change here
-
-        buscode = "101"
-
-
+        
+        
         oto:Otobus = crawlRoute(buscode)
         # guncel sefer saatleri alindi
+
+
 
         if oto == None:
             logger.error(f"Bus code: {buscode} neither could not be crawled or found from database")
